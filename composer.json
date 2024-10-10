@@ -1,0 +1,7 @@
+{
+    "name": "dws/woo-montage",
+    "type": "wordpress-plugin",
+    "require": {
+        "aws/aws-sdk-php": "^3.0"
+    }
+}
