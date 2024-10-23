@@ -17,13 +17,17 @@ export const WooSingleCropper = ({ aspectRatio, image, setImage, setCroppedImage
 		e.preventDefault()
 		const canvas = cropperRef.current?.getCanvas()
 		if (canvas) {
-			setCroppedImage(0, canvas.toDataURL('image/jpg'))
-			canvas.toBlob((blob) => {
-				if (blob) {
-					const blobUrl = URL.createObjectURL(blob)
-					setPreviewImage(blobUrl)
-				}
-			}, 'image/png')
+			canvas.toBlob(
+				(blob) => {
+					if (blob) {
+						setCroppedImage(0, blob)
+						const blobUrl = URL.createObjectURL(blob)
+						setPreviewImage(blobUrl)
+					}
+				},
+				'image/webp',
+				0.8,
+			)
 		}
 		setDone(true)
 	}
@@ -33,7 +37,6 @@ export const WooSingleCropper = ({ aspectRatio, image, setImage, setCroppedImage
 
 		if (files && files[0]) {
 			const blob = URL.createObjectURL(files[0])
-
 			setImage({
 				src: blob,
 				type: files[0].type,

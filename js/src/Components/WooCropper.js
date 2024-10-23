@@ -25,13 +25,17 @@ export const WooCropper = ({ element, index, setCroppedImage }) => {
 		e.preventDefault()
 		const canvas = cropperRef.current?.getCanvas()
 		if (canvas) {
-			setCroppedImage(element.id, canvas.toDataURL('image/jpg'))
-			canvas.toBlob((blob) => {
-				if (blob) {
-					const blobUrl = URL.createObjectURL(blob)
-					element.setAttribute('href', blobUrl)
-				}
-			}, 'image/png')
+			canvas.toBlob(
+				(blob) => {
+					if (blob) {
+						setCroppedImage(0, blob)
+						const blobUrl = URL.createObjectURL(blob)
+						element.setAttribute('href', blobUrl)
+					}
+				},
+				'image/webp',
+				0.8,
+			)
 		}
 		setDone(true)
 	}
@@ -41,7 +45,6 @@ export const WooCropper = ({ element, index, setCroppedImage }) => {
 
 		if (files && files[0]) {
 			const blob = URL.createObjectURL(files[0])
-
 			setImage({
 				src: blob,
 				type: files[0].type,

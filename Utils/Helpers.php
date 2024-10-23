@@ -39,14 +39,24 @@ function dws_load_svg_as_xml($svg_sring_url)
 
 function dws_upload_image($data, $product_id, $id, $upload_path, $upload_url)
 {
-    $base64_string = preg_replace('/data:image\/.*;base64,/', '', $data);
-    $decoded = base64_decode($base64_string);
 
-    $filename = $id ? $product_id . '-' . $id . '.jpg' : $product_id . '.jpg';
-    $output_file = $upload_path . $filename;
-    $file_url = $upload_url . $filename;
-    file_put_contents($output_file, $decoded);
-    return $file_url;
+    $output_file = $upload_path . $data['name'];
+    $file_url = $upload_url . $data['name'];
+
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $output_file)) {
+        return $file_url;
+    } else {
+        return false;
+    }
+
+    // $base64_string = preg_replace('/data:image\/.*;base64,/', '', $data);
+    // $decoded = base64_decode($base64_string);
+
+    // $filename = $id ? $product_id . '-' . $id . '.png' : $product_id . '.png';
+    // $output_file = $upload_path . $filename;
+    // $file_url = $upload_url . $filename;
+    // file_put_contents($output_file, $decoded);
+
 }
 
 function dws_replace_svg_url_at_index($matchingElements, $url)

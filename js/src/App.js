@@ -117,7 +117,7 @@ export const App = () => {
 			formData.append('variation_id', document.querySelector('.variation_id')?.value)
 			formData.append('quantity', document.querySelector('.qty').value)
 			Object.entries(croppedImages).forEach(([key, value]) => {
-				formData.append(key, value)
+				formData.append(key, value, key + '.png')
 			})
 		} else {
 			formData.append('action', 'add_to_cart_with_images')
@@ -126,7 +126,7 @@ export const App = () => {
 			formData.append('dws_nonce', ajax_object.dws_nonce)
 			formData.append('quantity', document.querySelector('.qty').value)
 			Object.entries(croppedImages).forEach(([key, value]) => {
-				formData.append(key, value)
+				formData.append(key, value, key + '.png')
 			})
 
 			Object.entries(editedTexts).forEach(([key, value]) => {
@@ -136,23 +136,77 @@ export const App = () => {
 		return formData
 	}
 
-	function addToCartWithImages() {
-		jQuery('.single_add_to_cart_button').text('Kérlek várj, amíg a képek feltöltődnek!')
-		jQuery.ajax({
-			type: 'POST',
-			url: ajax_object.ajax_url,
-			data: createFormData(),
-			processData: false,
-			contentType: false,
-			success: function (response) {
-				//jQuery('.single_add_to_cart_button').text('Kosárba rakva!')
-				window.location.href = '/kosar'
-			},
-			error: function (error) {
-				jQuery('.single_add_to_cart_button').text('Hiba!')
-			},
-		})
+	async function addToCartWithImages() {
+		const button = jQuery('.single_add_to_cart_button')
+		const formData = createFormData()
+
+		button.text('Kérlek várj, amíg a képek feltöltődnek!')
+
+		try {
+			const xhr = new XMLHttpRequest()
+
+			xhr.upload.addEventListener('progress', function (e) {
+				if (e.lengthComputable) {
+					const percentComplete = Math.round((e.loaded / e.total) * 100)
+					button.text(`Feltöltés ${percentComplete}%`)
+				}
+			})
+
+			xhr.open('POST', ajax_object.ajax_url, true)
+
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4) {
+					if (xhr.status === 200) {
+						window.location.href = '/kosar'
+					} else {
+						button.text('Hiba!')
+					}
+				}
+			}
+
+			xhr.send(formData)
+		} catch (error) {
+			button.text('Hiba!')
+		}
 	}
+
+	// async function addToCartWithImages() {
+	// 	jQuery('.single_add_to_cart_button').text('Kérlek várj, amíg a képek feltöltődnek!')
+
+	// 	try {
+	// 		const response = await fetch(ajax_object.ajax_url, {
+	// 			method: 'POST',
+	// 			body: createFormData(),
+	// 		})
+
+	// 		if (response.ok) {
+	// 			//jQuery('.single_add_to_cart_button').text('Kosárba rakva!')
+	// 			window.location.href = '/kosar'
+	// 		} else {
+	// 			jQuery('.single_add_to_cart_button').text('Hiba!')
+	// 		}
+	// 	} catch (error) {
+	// 		jQuery('.single_add_to_cart_button').text('Hiba!')
+	// 	}
+	// }
+
+	// function addToCartWithImages() {
+	// 	jQuery('.single_add_to_cart_button').text('Kérlek várj, amíg a képek feltöltődnek!')
+	// 	jQuery.ajax({
+	// 		type: 'POST',
+	// 		url: ajax_object.ajax_url,
+	// 		data: createFormData(),
+	// 		processData: false,
+	// 		contentType: false,
+	// 		success: function (response) {
+	// 			//jQuery('.single_add_to_cart_button').text('Kosárba rakva!')
+	// 			window.location.href = '/kosar'
+	// 		},
+	// 		error: function (error) {
+	// 			jQuery('.single_add_to_cart_button').text('Hiba!')
+	// 		},
+	// 	})
+	// }
 
 	if (Object.keys(ajax_object.aspect_ratios).length > 0) {
 		return (

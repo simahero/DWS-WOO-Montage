@@ -29,16 +29,47 @@ function dws_add_to_cart_with_images()
         return;
     }
 
+    $old_upload_filter = [];
+
+    add_filter('upload_dir', function ($uploads) use ($upload_path, $upload_url) {
+        $old_upload_filter = $uploads;
+        $uploads['path'] = $upload_path;
+        $uploads['url'] = $upload_url;
+        return $uploads;
+    });
+
+    foreach ($_FILES as $id => $data) {
+
+        $matchingElements = $xml->xpath("//*[@id='{$id}']");
+        $filename = $id ? $product_id . '-' . $id . '.webp' : $product_id . '.webp';
+        // $output_file = $upload_path . $filename;
+        // $file_url = $upload_url . $filename;
+
+        // if (move_uploaded_file($data['tmp_name'], $output_file)) {
+        //     dws_replace_svg_url_at_index($matchingElements, $file_url);
+        //     $file_urls[$id] = $file_url;
+        // }
+
+        $upload = wp_upload_bits($filename, null, file_get_contents($data['tmp_name']));
+
+        if (empty($upload['error'])) {
+            // Add the file URL to the array
+            $file_urls[$id] = $upload['url'];
+        } else {
+            // Handle the error as needed
+            // For example, you can log the error or display a message
+            error_log('File upload error: ' . $upload['error']);
+        }
+    }
+
+    add_filter('upload_dir', function ($uploads) use ($old_upload_filter) {
+        return $old_upload_filter;
+    });
+
     foreach ($_POST as $id => $data) {
         $matchingElements = $xml->xpath("//*[@id='{$id}']");
 
-        if (str_starts_with($data, 'data:')) {
-            $file_url = dws_upload_image($data, $product_id, $id, $upload_path, $upload_url);
-            dws_replace_svg_url_at_index($matchingElements, $file_url);
-            $file_urls[$id] = $file_url;
-        } else {
-            dws_replace_svg_text_at_index($matchingElements, $data);
-        }
+        dws_replace_svg_text_at_index($matchingElements, $data);
     }
 
     $svg_url = $upload_url .  dws_save_updated_svg($xml, $product_id, $upload_path);
@@ -59,7 +90,7 @@ function dws_add_to_cart_with_images()
         wp_send_json_error('Failed to add item to cart');
     }
 
-    die();
+    wp_send_json_success();
 }
 
 add_action('wp_ajax_add_to_cart_with_single_image', 'dws_add_to_cart_with_single_image');
@@ -84,12 +115,41 @@ function dws_add_to_cart_with_single_image()
     $upload_path      = dws_get_upload_path($directory_id);
     $upload_url       = dws_get_upload_url($directory_id);
 
-    foreach ($_POST as $id => $data) {
-        if (str_starts_with($data, 'data:')) {
-            $file_url = dws_upload_image($data, $product_id, null, $upload_path, $upload_url);
-            $file_urls[$id] = $file_url;
+    $old_upload_filter = [];
+
+    add_filter('upload_dir', function ($uploads) use ($upload_path, $upload_url) {
+        $old_upload_filter = $uploads;
+        $uploads['path'] = $upload_path;
+        $uploads['url'] = $upload_url;
+        return $uploads;
+    });
+
+    foreach ($_FILES as $id => $data) {
+
+        $filename = $id ? $product_id . '-' . $id . '.webp' : $product_id . '.webp';
+        // $output_file = $upload_path . $filename;
+        // $file_url = $upload_url . $filename;
+
+        // if (move_uploaded_file($data['tmp_name'], $output_file)) {
+        //     $file_urls[$id] = $file_url;
+        // }
+
+        $upload = wp_upload_bits($filename, null, file_get_contents($data['tmp_name']));
+
+        if (empty($upload['error'])) {
+            // Add the file URL to the array
+            $file_urls[$id] = $upload['url'];
+        } else {
+            // Handle the error as needed
+            // For example, you can log the error or display a message
+            error_log('File upload error: ' . $upload['error']);
         }
     }
+
+    add_filter('upload_dir', function ($uploads) use ($old_upload_filter) {
+        return $old_upload_filter;
+    });
+
 
     $success = WC()->cart->add_to_cart(
         $product_id,
@@ -106,5 +166,5 @@ function dws_add_to_cart_with_single_image()
         wp_send_json_error('Failed to add item to cart');
     }
 
-    die();
+    wp_send_json_success();
 }
