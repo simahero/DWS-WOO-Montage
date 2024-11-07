@@ -36,7 +36,11 @@ function dws_woocommerce_new_order_action($order_id)
 
             $old_name = end(explode('/', $url));
             $old_path = $upload_path . $old_name;
-            $new_name = str_replace($product_id, $order_id . '-' . $item->get_quantity(), $old_name);
+
+            $new_order_id = get_post_meta($order_id, 'dws_id_changed_id', true);
+            $new_name = str_replace($product_id, $new_order_id, $old_name);
+            // $new_name = str_replace($product_id, $order_id . '-' . $item->get_quantity(), $old_name);
+
             $new_path = $upload_path . $new_name;
 
             if (!file_exists($new_path)) {
@@ -77,7 +81,11 @@ function dws_woocommerce_new_order_action($order_id)
 
             $svg_name = end(explode('/', $svg_url));
             $svg_old_path = dws_get_path_from_url($svg_url);
-            $svg_new_name = str_replace($product_id, $order_id . '-' . $item->get_quantity(), $svg_name);
+
+            $new_order_id = get_post_meta($order_id, 'dws_id_changed_id', true);
+            $svg_new_name = str_replace($product_id, $new_order_id, $old_name);
+            // $svg_new_name = str_replace($product_id, $order_id . '-' . $item->get_quantity(), $svg_name);
+
             $svg_new_path = $upload_path . $svg_new_name;
 
             if (!file_exists($svg_new_path)) {
