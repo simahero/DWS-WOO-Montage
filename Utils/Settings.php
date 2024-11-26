@@ -41,7 +41,6 @@ class DWSMontage
                 <?php
                 settings_fields('dws_montage_option_group');
                 do_settings_sections('dws-montage-admin');
-                do_settings_sections('dws-woo-custom-id-admin');
                 submit_button();
                 ?>
             </form>
