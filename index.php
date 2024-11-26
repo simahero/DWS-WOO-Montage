@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       _DWS-WOO-MONTAGE
  * Description:       
- * Version:           2.1.1
+ * Version:           3.0.1
  * Author:            Ront車 Zolt芍n
  * Author URI:        simahero.github.io
  * Text Domain:       
@@ -26,6 +26,8 @@ include_once __DIR__ . "/WooCommerce/Product.php";
 include_once __DIR__ . "/WooCommerce/WooAddOrderMeta.php";
 include_once __DIR__ . "/WooCommerce/WooAdmin.php";
 include_once __DIR__ . "/WooCommerce/WooAjax.php";
+include_once __DIR__ . "/WooCommerce/ProductSettings.php";
+include_once __DIR__ . "/WooCommerce/WooOrderNumber.php";
 // include_once __DIR__ . "/WooCommerce/WooRemoveCart.php";
 include_once __DIR__ . "/WooCommerce/WooUploadS3.php";
 

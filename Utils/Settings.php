@@ -41,6 +41,7 @@ class DWSMontage
                 <?php
                 settings_fields('dws_montage_option_group');
                 do_settings_sections('dws-montage-admin');
+                do_settings_sections('dws-woo-custom-id-admin');
                 submit_button();
                 ?>
             </form>
@@ -57,7 +58,7 @@ class DWSMontage
 
         add_settings_section(
             'dws_montage_setting_section', // id
-            'Settings', // title
+            'AWS', // title
             array($this, 'dws_montage_section_info'), // callback
             'dws-montage-admin' // page
         );
@@ -93,6 +94,29 @@ class DWSMontage
             'dws-montage-admin', // page
             'dws_montage_setting_section' // section
         );
+
+        add_settings_section(
+            'dws_woo_custom_id_setting_section',
+            'Order ID',
+            array($this, 'dws_woo_custom_id_section_info'),
+            'dws-woo-custom-id-admin'
+        );
+
+        add_settings_field(
+            'jelenlegi_id_0',
+            'Jelenlegi ID',
+            array($this, 'jelenlegi_id_0_callback'),
+            'dws-woo-custom-id-admin',
+            'dws_woo_custom_id_setting_section'
+        );
+
+        add_settings_field(
+            'kategoria_id_k_1',
+            'Kategória ID-k',
+            array($this, 'kategoria_id_k_1_callback'),
+            'dws-woo-custom-id-admin',
+            'dws_woo_custom_id_setting_section'
+        );
     }
 
     public function dws_montage_sanitize($input)
@@ -114,12 +138,18 @@ class DWSMontage
             $sanitary_values['s3_region_3'] = sanitize_text_field($input['s3_region_3']);
         }
 
+        if (isset($input['jelenlegi_id_0'])) {
+            $sanitary_values['jelenlegi_id_0'] = sanitize_text_field($input['jelenlegi_id_0']);
+        }
+
+        if (isset($input['kategoria_id_k_1'])) {
+            $sanitary_values['kategoria_id_k_1'] = sanitize_text_field($input['kategoria_id_k_1']);
+        }
+
         return $sanitary_values;
     }
 
-    public function dws_montage_section_info()
-    {
-    }
+    public function dws_montage_section_info() {}
 
     public function s3_access_key_0_callback()
     {
@@ -150,6 +180,24 @@ class DWSMontage
         printf(
             '<input class="regular-text" type="text" name="dws_montage_option_name[s3_region_3]" id="s3_region_3" value="%s">',
             isset($this->dws_montage_options['s3_region_3']) ? esc_attr($this->dws_montage_options['s3_region_3']) : ''
+        );
+    }
+
+    public function dws_woo_custom_id_section_info() {}
+
+    public function jelenlegi_id_0_callback()
+    {
+        printf(
+            '<input class="regular-text" type="text" name="dws_montage_option_name[jelenlegi_id_0]" id="jelenlegi_id_0" value="%s">',
+            isset($this->dws_montage_options['jelenlegi_id_0']) ? esc_attr($this->dws_montage_options['jelenlegi_id_0']) : ''
+        );
+    }
+
+    public function kategoria_id_k_1_callback()
+    {
+        printf(
+            '<input class="regular-text" type="text" name="dws_montage_option_name[kategoria_id_k_1]" id="kategoria_id_k_1" value="%s">',
+            isset($this->dws_montage_options['kategoria_id_k_1']) ? esc_attr($this->dws_montage_options['kategoria_id_k_1']) : ''
         );
     }
 }
