@@ -6,6 +6,9 @@ add_action('wp_ajax_nopriv_add_to_cart_with_images', 'dws_add_to_cart_with_image
 function dws_add_to_cart_with_images()
 {
 
+    $dws_montage_options = get_option('dws_montage_option_name');
+    $filetype = $dws_montage_options['filetype'] ?: 'png';
+
     $product_id = isset($_POST['product_id']) ? sanitize_text_field($_POST['product_id']) : '';
     $quantity = isset($_POST['quantity']) ? sanitize_text_field($_POST['quantity']) : 1;
     $variation_id  = isset($_POST['variation_id']) ? sanitize_text_field($_POST['variation_id']) : 0;
@@ -41,7 +44,7 @@ function dws_add_to_cart_with_images()
     foreach ($_FILES as $id => $data) {
 
         $matchingElements = $xml->xpath("//*[@id='{$id}']");
-        $filename = $id ? $product_id . '-' . $id . '.webp' : $product_id . '.webp';
+        $filename = $id ? $product_id . '-' . $id . '.' . $filetype : $product_id . '.' . $filetype;
         // $output_file = $upload_path . $filename;
         // $file_url = $upload_url . $filename;
 
@@ -99,6 +102,9 @@ add_action('wp_ajax_nopriv_add_to_cart_with_single_image', 'dws_add_to_cart_with
 function dws_add_to_cart_with_single_image()
 {
 
+    $dws_montage_options = get_option('dws_montage_option_name');
+    $filetype = $dws_montage_options['filetype'] ?: 'png';
+
     $product_id = isset($_POST['product_id']) ? sanitize_text_field($_POST['product_id']) : '';
     $quantity = isset($_POST['quantity']) ? sanitize_text_field($_POST['quantity']) : 1;
     $variation_id  = isset($_POST['variation_id']) ? sanitize_text_field($_POST['variation_id']) : 0;
@@ -126,7 +132,7 @@ function dws_add_to_cart_with_single_image()
 
     foreach ($_FILES as $id => $data) {
 
-        $filename = $id ? $product_id . '-' . $id . '.webp' : $product_id . '.webp';
+        $filename = $id ? $product_id . '-' . $id . '.' . $filetype : $product_id . '.' . $filetype;
         // $output_file = $upload_path . $filename;
         // $file_url = $upload_url . $filename;
 

@@ -50,7 +50,7 @@ function dws_woocommerce_new_order_action($order_id)
                     $result = dws_upload_file_to_s3($s3, $new_name, $new_path, $directory_id);
                     if ($result["result"]) {
                         $new_urls[$id] = $result["url"];
-                        $order->add_order_note('File uploaded successfully. URL: ' . $result["url"]);
+                        $order->add_order_note('File uploaded successfully. URL: <a href="' . esc_url($result["url"]) . '" target="_blank">' . $result["url"] . '</a>');
                     } else {
                         $new_urls[$id] = $new_path;
                         $order->add_order_note('Error uploading file: ' . $result["error"]);
@@ -98,7 +98,7 @@ function dws_woocommerce_new_order_action($order_id)
                         $order->add_order_note("Converted to: " . $converted);
                         $result = dws_upload_file_to_s3($s3, $svg_name, $converted, $directory_id);
                         if ($result["result"]) {
-                            $order->add_order_note('File uploaded successfully. URL: ' . $result["url"]);
+                            $order->add_order_note('File uploaded successfully. URL: <a href="' . esc_url($result["url"]) . '" target="_blank">' . $result["url"] . '</a>');
                             wc_update_order_item_meta($item_id, 'dws_svg', $result["url"]);
                         } else {
                             wc_update_order_item_meta($item_id, 'dws_svg', $converted);
