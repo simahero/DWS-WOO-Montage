@@ -33,8 +33,8 @@ export const WooCropper = ({ element, index, setCroppedImage }) => {
 						element.setAttribute('href', blobUrl)
 					}
 				},
-				'image/webp',
-				0.8,
+				'image/' + window.ajax_object.filetype,
+				parseFloat(window.ajax_object.quality / 100),
 			)
 		}
 		setDone(true)

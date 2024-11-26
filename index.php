@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       _DWS-WOO-MONTAGE
  * Description:       
- * Version:           3.0.1
+ * Version:           3.1.1
  * Author:            Ront車 Zolt芍n
  * Author URI:        simahero.github.io
  * Text Domain:       
@@ -71,6 +71,8 @@ add_action('wp_enqueue_scripts', function ($a) {
 		}
 	}
 
+	$dws_montage_options = get_option('dws_montage_option_name');
+
 	wp_enqueue_style('dws-woo-montage-cropper-style', plugin_dir_url(__FILE__) . 'CSS/style.css');
 
 	wp_enqueue_style('dws-woo-montage-style', plugin_dir_url(__FILE__) . 'js/build/static/css/styles.css');
@@ -84,6 +86,8 @@ add_action('wp_enqueue_scripts', function ($a) {
 			'dws_nonce' => wp_create_nonce('dws_image_nonce'),
 			'product_id' => $post->ID,
 			'aspect_ratios' => $aspect_ratios,
+			'filetype' => $dws_montage_options['filetype'] ?: 'png',
+			'quality' => $dws_montage_options['quality'] ?: 90
 		)
 	);
 }, 10, 1);

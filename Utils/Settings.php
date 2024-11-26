@@ -99,14 +99,14 @@ class DWSMontage
             'dws_woo_custom_id_setting_section',
             'Order ID',
             array($this, 'dws_woo_custom_id_section_info'),
-            'dws-woo-custom-id-admin'
+            'dws-montage-admin'
         );
 
         add_settings_field(
             'jelenlegi_id_0',
             'Jelenlegi ID',
             array($this, 'jelenlegi_id_0_callback'),
-            'dws-woo-custom-id-admin',
+            'dws-montage-admin',
             'dws_woo_custom_id_setting_section'
         );
 
@@ -114,8 +114,31 @@ class DWSMontage
             'kategoria_id_k_1',
             'Kategória ID-k',
             array($this, 'kategoria_id_k_1_callback'),
-            'dws-woo-custom-id-admin',
+            'dws-montage-admin',
             'dws_woo_custom_id_setting_section'
+        );
+
+        add_settings_section(
+            'dws_montage_filetype_quality_section', // id
+            'File Settings', // title
+            array($this, 'dws_montage_filetype_quality_section_info'), // callback
+            'dws-montage-admin' // page
+        );
+
+        add_settings_field(
+            'filetype', // id
+            'Filetype', // title
+            array($this, 'filetype_callback'), // callback
+            'dws-montage-admin', // page
+            'dws_montage_filetype_quality_section' // section
+        );
+
+        add_settings_field(
+            'quality', // id
+            'Quality', // title
+            array($this, 'quality_callback'), // callback
+            'dws-montage-admin', // page
+            'dws_montage_filetype_quality_section' // section
         );
     }
 
@@ -144,6 +167,20 @@ class DWSMontage
 
         if (isset($input['kategoria_id_k_1'])) {
             $sanitary_values['kategoria_id_k_1'] = sanitize_text_field($input['kategoria_id_k_1']);
+        }
+
+        if (isset($input['filetype'])) {
+            $valid_filetypes = ['png', 'jpeg', 'webp'];
+            if (in_array($input['filetype'], $valid_filetypes)) {
+                $sanitary_values['filetype'] = sanitize_text_field($input['filetype']);
+            }
+        }
+
+        if (isset($input['quality'])) {
+            $quality = intval($input['quality']);
+            if ($quality >= 1 && $quality <= 100) {
+                $sanitary_values['quality'] = $quality;
+            }
         }
 
         return $sanitary_values;
@@ -198,6 +235,30 @@ class DWSMontage
         printf(
             '<input class="regular-text" type="text" name="dws_montage_option_name[kategoria_id_k_1]" id="kategoria_id_k_1" value="%s">',
             isset($this->dws_montage_options['kategoria_id_k_1']) ? esc_attr($this->dws_montage_options['kategoria_id_k_1']) : ''
+        );
+    }
+
+    public function dws_montage_filetype_quality_section_info() {}
+
+    public function filetype_callback()
+    {
+        $options = ['png', 'jpeg', 'webp']; // Dropdown options
+        $current_value = isset($this->dws_montage_options['filetype']) ? $this->dws_montage_options['filetype'] : '';
+
+        echo '<select name="dws_montage_option_name[filetype]" id="filetype">';
+        foreach ($options as $option) {
+            $selected = ($current_value === $option) ? 'selected="selected"' : '';
+            printf('<option value="%s" %s>%s</option>', esc_attr($option), $selected, strtoupper($option));
+        }
+        echo '</select>';
+    }
+
+    public function quality_callback()
+    {
+        $current_value = isset($this->dws_montage_options['quality']) ? $this->dws_montage_options['quality'] : '';
+        printf(
+            '<input class="regular-text" type="number" name="dws_montage_option_name[quality]" id="quality" value="%s" min="1" max="100">',
+            esc_attr($current_value)
         );
     }
 }
