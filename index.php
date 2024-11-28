@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       _DWS-WOO-MONTAGE
  * Description:       
- * Version:           3.1.5
+ * Version:           3.1.6
  * Author:            Ront車 Zolt芍n
  * Author URI:        simahero.github.io
  * Text Domain:       

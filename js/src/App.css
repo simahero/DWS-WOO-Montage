@@ -1,80 +1,87 @@
+.single_variation_wrap {
+	width: 100% !important;
+}
+
 .product .woocommerce .wp-block-columns .wp-block-column:first-child {
-  position: relative;
+	position: relative;
 }
 .wp-block-woocommerce-product-image-gallery {
-  position: sticky !important;
-  top: 50px !important;
+	position: sticky !important;
+	top: 50px !important;
 }
 #dws-woo-cropper-markup {
-  position: relative;
-  z-index: 10;
-  overflow: hidden;
+	position: relative;
+	z-index: 10;
+	overflow: hidden;
 }
-#dws-woo-cropper-markup img{
-  width: 100%;
-  height: auto;
+#dws-woo-cropper-markup img {
+	width: 100%;
+	height: auto;
 }
 #dws-woo-cropper-markup svg {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 #dws-woo-cropper button {
-  background-color: rgba(195, 34, 48, 1);
-  border-color: #1a7efb;
-  color: #ffffff;
-  min-width: 100%;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.5;
-  padding: 8px 20px;
-  position: relative;
-  text-align: center;
-  transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  white-space: nowrap;
-  margin: 10px 0 0 0 !important;
+	background-color: rgba(195, 34, 48, 1);
+	border-color: #1a7efb;
+	color: #ffffff;
+	min-width: 100%;
+	border: 1px solid transparent;
+	border-radius: 7px;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.5;
+	padding: 8px 20px;
+	position: relative;
+	text-align: center;
+	transition:
+		background-color 0.15s ease-in-out,
+		border-color 0.15s ease-in-out,
+		box-shadow 0.15s ease-in-out;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	vertical-align: middle;
+	white-space: nowrap;
+	margin: 10px 0 0 0 !important;
 }
 .dws-wrapper {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.667) !important;
-  margin: 12px 0;
+	width: 100%;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.667) !important;
+	margin: 12px 0;
 }
 .dws-title {
-  background-color: #f4f4f4;
-  padding: 8px 20px;
-  cursor: pointer;
-  margin: 0 0 10px 0;
-  border-radius: 10px;
+	background-color: #f4f4f4;
+	padding: 8px 20px;
+	cursor: pointer;
+	margin: 0 0 10px 0;
+	border-radius: 10px;
 }
 
 .dws-content-active {
-  width: 100%;
-  display: block !important;
+	width: 100%;
+	display: block !important;
 }
 .dws-content {
-  padding: 10px;
-  display: none !important;
+	padding: 10px;
+	display: none !important;
 }
 .dws.active {
-  background-color: #eaeaea;
+	background-color: #eaeaea;
 }
 .dws-content.active {
-  display: block;
+	display: block;
 }
 
 #product-sidebar {
-  display: none;
+	display: none;
 }
 
 #dws-woo-cropper {
-  width: 100%;
+	width: 100%;
 }
