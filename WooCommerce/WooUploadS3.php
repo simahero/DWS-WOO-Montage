@@ -12,6 +12,8 @@ function dws_woocommerce_new_order_action($order_id)
 
     $order = wc_get_order($order_id);
 
+    dws_change_woocommerce_order_number($order_id);
+
     $dws_montage_options = get_option('dws_montage_option_name');
     $s3 = new S3Client([
         'version'     => 'latest',
