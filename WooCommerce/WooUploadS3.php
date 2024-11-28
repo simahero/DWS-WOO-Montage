@@ -2,6 +2,7 @@
 
 use Aws\S3\S3Client;
 
+add_action('woocommerce_order_status_processing', 'dws_woocommerce_new_order_action', 10, 1);
 add_action('woocommerce_thankyou', 'dws_woocommerce_new_order_action', 10, 1);
 function dws_woocommerce_new_order_action($order_id)
 {
