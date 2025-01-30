@@ -34,6 +34,8 @@ function dws_woocommerce_new_order_action($order_id)
 
         $upload_path = dws_get_upload_path($directory_id);
 
+        $error = false;
+
         $new_urls = [];
 
         foreach ($file_names as $id => $url) {
@@ -57,6 +59,7 @@ function dws_woocommerce_new_order_action($order_id)
                         $order->add_order_note('File uploaded successfully. URL: <a href="' . esc_url($result["url"]) . '" target="_blank">' . $result["url"] . '</a>');
                     } else {
                         $new_urls[$id] = $new_path;
+                        $error = true;
                         $order->add_order_note('Error uploading file: ' . $result["error"]);
                     }
                 } else {
@@ -105,6 +108,7 @@ function dws_woocommerce_new_order_action($order_id)
                             $order->add_order_note('File uploaded successfully. URL: <a href="' . esc_url($result["url"]) . '" target="_blank">' . $result["url"] . '</a>');
                             wc_update_order_item_meta($item_id, 'dws_svg', $result["url"]);
                         } else {
+                            $error = true;
                             wc_update_order_item_meta($item_id, 'dws_svg', $converted);
                             $order->add_order_note('Error uploading file: ' . $result["error"]);
                         }
@@ -117,6 +121,8 @@ function dws_woocommerce_new_order_action($order_id)
             }
         }
     }
+
+    if (!$error) dws_remove_dir($upload_path);
 
     update_post_meta($order_id, 'dws_s3_uploaded', true);
 
