@@ -138,6 +138,7 @@ function dws_remove_dir($path)
 {
     if (!is_dir($path)) {
         unlink($path);
+        return;
     }
 
     $path = rtrim($path, '/') . '/';
