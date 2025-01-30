@@ -137,7 +137,7 @@ function dws_convert_svg_to_jpg($path)
 function dws_remove_dir($path)
 {
     if (!is_dir($path)) {
-        throw new InvalidArgumentException("$path must be a directory");
+        unlink($path);
     }
 
     $path = rtrim($path, '/') . '/';
