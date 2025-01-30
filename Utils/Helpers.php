@@ -95,7 +95,7 @@ function dws_upload_file_to_s3($s3, $name, $path, $directory_id)
             'ACL'    => 'public-read',
         ]);
 
-        unlink($path);
+        dws_remove_dir($path);
 
         return array(
             "result" => true,
