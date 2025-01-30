@@ -106,6 +106,11 @@ function dws_upload_file_to_s3($s3, $name, $path, $directory_id)
             "result" => false,
             "error" => $e->getMessage()
         );
+    } catch (Exception $e) {
+        return array(
+            "result" => false,
+            "error" => $e->getMessage()
+        );
     }
 }
 
@@ -134,16 +139,31 @@ function dws_remove_dir($path)
     if (!is_dir($path)) {
         throw new InvalidArgumentException("$path must be a directory");
     }
-    if (substr($path, strlen($path) - 1, 1) != '/') {
-        $path .= '/';
+
+    $path = rtrim($path, '/') . '/';
+
+    $files = scandir($path);
+    if ($files === false) {
+        throw new RuntimeException("Unable to scan directory $path");
     }
-    $files = glob($path . '*', GLOB_MARK);
+
     foreach ($files as $file) {
-        if (is_dir($file)) {
-            dws_remove_dir($file);
+        if ($file === '.' || $file === '..') {
+            continue;
+        }
+
+        $filePath = $path . $file;
+
+        if (is_dir($filePath)) {
+            dws_remove_dir($filePath);
         } else {
-            unlink($file);
+            if (!unlink($filePath)) {
+                throw new RuntimeException("Unable to delete file $filePath");
+            }
         }
     }
-    rmdir($path);
+
+    if (!rmdir($path)) {
+        throw new RuntimeException("Unable to delete directory $path");
+    }
 }
