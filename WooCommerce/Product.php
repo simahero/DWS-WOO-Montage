@@ -50,7 +50,16 @@ function dws_woocommerce_product_custom_fields()
             'id'            => '_dws_use_aspect_ratio',
             'style'         => 'display: block!important;',
             'label'         => __('Keparany hasznalata', 'woocommerce'),
-            'description'   => __('Keparany hasznalata', 'woocommerce')
+            'description'   => __('Képarány használata', 'woocommerce')
+        )
+    );
+
+    woocommerce_wp_checkbox(
+        array(
+            'id'            => '_dws_skip_cropper',
+            'style'         => 'display: block!important;',
+            'label'         => __('Cropper kihagyasa', 'woocommerce'),
+            'description'   => __('Ha be van jelölve, csak sima képfeltöltés lesz elérhető.', 'woocommerce')
         )
     );
 
@@ -99,8 +108,11 @@ function dws_woocommerce_product_custom_fields_save($post_id)
     $woocommerce_dws_svg_css = $_POST['_dws_svg_css'];
     update_post_meta($post_id, '_dws_svg_css', esc_attr($woocommerce_dws_svg_css));
 
-    $woocommerce_dws_use_aspect_ratio = $_POST['_dws_use_aspect_ratio'];
+    $woocommerce_dws_use_aspect_ratio = isset($_POST['_dws_use_aspect_ratio']) ? 'yes' : 'no';
     update_post_meta($post_id, '_dws_use_aspect_ratio', esc_attr($woocommerce_dws_use_aspect_ratio));
+
+    $woocommerce_dws_skip_cropper = isset($_POST['_dws_skip_cropper']) ? 'yes' : 'no';
+    update_post_meta($post_id, '_dws_skip_cropper', esc_attr($woocommerce_dws_skip_cropper));
 }
 
 add_action('woocommerce_product_after_variable_attributes', 'dws_woocommerce_product_options_advanced', 10, 3);

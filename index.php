@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       _DWS-WOO-MONTAGE
  * Description:       
- * Version:           3.1.13
+ * Version:           4.1.2
  * Author:            Ront車 Zolt芍n
  * Author URI:        simahero.github.io
  * Text Domain:       
@@ -57,7 +57,8 @@ add_action('wp_enqueue_scripts', function ($a) {
 
 	if (!$is_dws_product) return;
 
-	$use_aspect_ratio = get_post_meta($post->ID, '_dws_use_aspect_ratio', true);
+	$use_aspect_ratio = get_post_meta($post->ID, '_dws_use_aspect_ratio', true) === 'yes';
+	$skip_cropper = get_post_meta($post->ID, '_dws_skip_cropper', true) === 'yes';
 	$aspect_ratios = array();
 
 	if ($use_aspect_ratio) {
@@ -86,6 +87,7 @@ add_action('wp_enqueue_scripts', function ($a) {
 			'dws_nonce' => wp_create_nonce('dws_image_nonce'),
 			'product_id' => $post->ID,
 			'aspect_ratios' => $aspect_ratios,
+			'skip_cropper' => $skip_cropper,
 			'filetype' => $dws_montage_options['filetype'] ?: 'png',
 			'quality' => $dws_montage_options['quality'] ?: 90
 		)

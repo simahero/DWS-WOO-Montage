@@ -17,9 +17,7 @@ export const App = () => {
 	const [readyToAddToCart, setReadyAddToCart] = useState([false])
 
 	const [singleImage, setSingleImage] = useState('')
-	const [aspectRatio, setAspectRatio] = useState(
-		parseFloat(ajax_object.aspect_ratios[document.querySelector('.variation_id')?.value]),
-	)
+	const [aspectRatio, setAspectRatio] = useState(parseFloat(ajax_object.aspect_ratios[document.querySelector('.variation_id')?.value]))
 
 	const add_to_cart_button = document.querySelectorAll('.single_add_to_cart_button')[0]
 	const new_add_to_cart_button = add_to_cart_button.cloneNode(true)
@@ -71,26 +69,19 @@ export const App = () => {
 		console.error(error)
 	}
 
-	try {
-		document.querySelector('.variations_form select').addEventListener('change', () => {
-			setTimeout(() => {
-				let ratio = ajax_object.aspect_ratios[document.querySelector('.variation_id')?.value]
-				setAspectRatio(parseFloat(ratio))
-			}, 300)
-		})
-	} catch (error) {
-		console.error(error)
-	}
-
-	try {
-		document.querySelector('.ux-swatches').addEventListener('click', () => {
-			setTimeout(() => {
-				let ratio = ajax_object.aspect_ratios[document.querySelector('.variation_id')?.value]
-				setAspectRatio(parseFloat(ratio))
-			}, 300)
-		})
-	} catch (error) {
-		console.error(error)
+	const variationIdElement = document.querySelector('.variation_id')
+	if (variationIdElement) {
+		if (!Boolean(ajax_object.skip_cropper)) {
+			const observer = new MutationObserver((mutations) => {
+				mutations.forEach((mutation) => {
+					if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+						let ratio = ajax_object.aspect_ratios[variationIdElement.value]
+						setAspectRatio(parseFloat(ratio))
+					}
+				})
+			})
+			observer.observe(variationIdElement, { attributes: true, attributeFilter: ['value'] })
+		}
 	}
 
 	const updateImagesAtIndex = (key, newValue, i) => {
@@ -157,7 +148,18 @@ export const App = () => {
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
 					if (xhr.status === 200) {
-						window.location.href = '/kosar'
+						const events = jQuery._data(document.body, 'events') || {}
+
+						const hasFkcartUpdate = !!events.fkcart_update_side_cart
+						const hasFkcartOpen = !!events.fkcart_open
+
+						if (hasFkcartUpdate || hasFkcartOpen) {
+							// FunnelKit Cart is active → open sidecart
+							jQuery('body').trigger('fkcart_update_side_cart', [true])
+						} else {
+							// No listeners → redirect to normal cart page
+							window.location.href = '/kosar'
+						}
 					} else {
 						button.text('Hiba!')
 					}
@@ -207,38 +209,18 @@ export const App = () => {
 	// 		},
 	// 	})
 	// }
-
-	if (Object.keys(ajax_object.aspect_ratios).length > 0) {
-		return (
-			<WooSingleCropper
-				key={aspectRatio}
-				image={singleImage}
-				setImage={setSingleImage}
-				aspectRatio={aspectRatio}
-				setCroppedImage={(htmlID, image) => updateImagesAtIndex(htmlID, image, 0)}
-			/>
-		)
+	if (Boolean(ajax_object.skip_cropper)) {
+		return <WooSingleCropper image={singleImage} setImage={setSingleImage} skipCropper={Boolean(ajax_object.skip_cropper)} setCroppedImage={(htmlID, image) => updateImagesAtIndex(htmlID, image, 0)} />
+	} else if (Object.keys(ajax_object.aspect_ratios).length > 0) {
+		return <WooSingleCropper key={aspectRatio} image={singleImage} setImage={setSingleImage} aspectRatio={aspectRatio} skipCropper={Boolean(ajax_object.skip_cropper)} setCroppedImage={(htmlID, image) => updateImagesAtIndex(htmlID, image, 0)} />
 	} else {
 		return (
 			<>
 				{Array.from(images).map((e, i) => {
-					return (
-						<WooCropper
-							key={i}
-							element={e}
-							index={i}
-							setCroppedImage={(htmlID, image) => updateImagesAtIndex(htmlID, image, i)}
-						/>
-					)
+					return <WooCropper key={i} element={e} index={i} setCroppedImage={(htmlID, image) => updateImagesAtIndex(htmlID, image, i)} />
 				})}
 				{Array.from(texts).map((e, i) => {
-					return (
-						<WooTextEditor
-							key={i}
-							element={e}
-							setEditedText={(htmlID, text) => updateTextsAtIndex(htmlID, text)}
-						/>
-					)
+					return <WooTextEditor key={i} element={e} setEditedText={(htmlID, text) => updateTextsAtIndex(htmlID, text)} />
 				})}
 				{/* <button onClick={() => addToCartWithImages()}>Kosárba teszem</button> */}
 			</>

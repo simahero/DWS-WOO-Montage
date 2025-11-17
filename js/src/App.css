@@ -37,16 +37,13 @@
 	padding: 8px 20px;
 	position: relative;
 	text-align: center;
-	transition:
-		background-color 0.15s ease-in-out,
-		border-color 0.15s ease-in-out,
-		box-shadow 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
 	vertical-align: middle;
 	white-space: nowrap;
-	margin: 10px 0 0 0 !important;
+	margin: 10px 0 0 0;
 }
 .dws-wrapper {
 	width: 100%;
@@ -84,4 +81,13 @@
 
 #dws-woo-cropper {
 	width: 100%;
+}
+
+.no-margin {
+	margin-top: 0 !important;
+}
+
+.dws-preview-thumbnail {
+	width: 150px !important;
+	max-width: 150px !important;
 }
